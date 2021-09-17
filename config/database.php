@@ -13,7 +13,7 @@ class DatabaseConnection{
         return $connection;
     }
 
-    public function Close(){
+    public function close(){
         mysql_close();
     }
 }
