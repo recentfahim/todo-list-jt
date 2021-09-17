@@ -21,7 +21,7 @@ class Database{
 
         if ($rows == 1) {
             $_SESSION['login'] = true;
-            $_SESSION['id'] = $user_data['id'];
+            $_SESSION['user_id'] = $user_data['id'];
             $_SESSION['email'] = $user_data['email'];
             $_SESSION['name'] = $user_data['name'];
             return true;
@@ -47,7 +47,27 @@ class Database{
     }
 
     public function create_todo($title, $description, $user_id){
+        $query = "INSERT INTO todos (title, description, user_id) VALUES ('".$title."', '".$description."', '".$user_id."')";
+        $result = mysqli_query($this->db, $query) or die(mysqli_connect_errno()."Data cannot inserted");
+        return $result;
 
+    }
+
+    public function get_todos($user_id){
+        $query = "SELECT * FROM todos WHERE user_id='".$user_id."'";
+        $result = mysqli_query($this->db, $query);
+        // $todos = mysqli_fetch_array($result);
+
+        $rows = array();
+        while($row = mysqli_fetch_array($result)){
+            $temp = array();
+            $temp['id'] = $row['title'];
+            $temp['title'] = $row['title'];
+            $temp['description'] = $row['description'];
+            $rows[] = $temp;
+        }
+
+        return $rows;
     }
 }
 
