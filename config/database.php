@@ -33,7 +33,7 @@ class Database{
 
     public function register_user($name, $email, $password){
         $query="SELECT * FROM users WHERE email='".$email."'";
-        $email_check =   $this->db->query($query) ;
+        $email_check = $this->db->query($query) ;
         $rows = $email_check->num_rows;
         if ($rows == 0){
             $password = md5($password);
