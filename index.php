@@ -39,14 +39,29 @@ session_start();
         </div>
     </div>
 </nav>
-<h4>Task List</h4>
+<div class="container">
+    <div>
+        <h4>Task List</h4>
+    </div>
+    <div>
+        <div class="mb-3 row">
+            <label for="todo-title" class="col-sm-12 col-form-label">Todo Add</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="todo-title" placeholder="Enter todo">
+            </div>
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-primary" id="todo-add">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
 <?php
     require_once('config/database.php');
     $db = new Database();
     $user_id = $_SESSION['user_id'];
     $todos = $db->get_todos($user_id);
 ?>
-<div class="containter">
+<div class="container">
     <div class="list-group">
         <?php
         foreach($todos as $todo):
@@ -98,6 +113,38 @@ session_start();
                     console.log(response);
                 }
             });
+        })
+    })
+
+    function create_todo(title) {
+        $.ajax({
+            type: "POST",
+            url: 'todos/create.php',
+            data: {todo_title: title},
+            success: function(response){
+                if(response == 1){
+                    console.log("Created Successfully!!");
+                }
+                else{
+                    console.log("Can't add the todo");
+                }
+            }
+        })
+    }
+
+    $(document).ready(function() {
+        $('#todo-title').keyup(function(event){
+            if(event.which === 13){
+                create_todo($('#todo-title').val());
+                $('#todo-title').val('');
+            }
+        })
+    });
+
+    $(function(){
+        $('#todo-add').click(function(){
+            create_todo($('#todo-title').val());
+            $('#todo-title').val('');
         })
     })
 </script>

@@ -46,10 +46,11 @@ class Database{
         }
     }
 
-    public function create_todo($title, $description, $user_id){
+    public function create_todo($title, $description=null, $user_id){
         $query = "INSERT INTO todos (title, description, user_id) VALUES ('".$title."', '".$description."', '".$user_id."')";
         $result = mysqli_query($this->db, $query) or die(mysqli_connect_errno()."Data cannot inserted");
-        return $result;
+        $todos = $this->get_todos($user_id);
+        return $user_id;
 
     }
 
