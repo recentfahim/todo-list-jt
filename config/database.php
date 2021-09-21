@@ -69,6 +69,16 @@ class Database{
 
         return $rows;
     }
+
+    public function delete_todo($todo_id, $user_id){
+        $query = "DELETE from todos WHERE id=$todo_id and user_id=$user_id";
+        $result = mysqli_query($this->db, $query);
+        if($result){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
 
 ?>
