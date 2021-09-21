@@ -51,17 +51,25 @@ session_start();
         <?php
         foreach($todos as $todo):
             ?>
-            <a href="#" class="list-group-item list-group-item-action">
-                <?php echo $todo['title'] ?>
-                <div class="float-right">
-                    <span class="text-danger">
-                        <i class="far fa-trash-alt"></i>
-                    </span>
-                    <span class="text-info">
-                        <i class="far fa-edit"></i>
-                    </span>
+            <div class="d-flex" class="list-group-item">
+                <div><?php echo $todo['title'] ?></div>
+                <div class="d-flex">
+                    <div>
+                        <a href="#" id="<?php echo $todo['id'] ?>" class="todo-delete">
+                            <span class="text-danger">
+                                <i class="far fa-trash-alt"></i>
+                            </span>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="#" id="<?php echo $todo['id'] ?>" class="todo-edit">
+                            <span class="text-info">
+                                <i class="far fa-edit"></i>
+                            </span>
+                        </a>
+                    </div>
                 </div>
-            </a>
+            </div>
         <?php
         endforeach
         ?>
@@ -69,19 +77,29 @@ session_start();
 </div>
 </body>
 <script type="application/javascript">
-    var deleteData = function(id){
-        $.ajax({
-            type: "GET",
-            url: "todos/delete.php",
-            data:{deleteId:id},
-            dataType: "html",
-            success: function(data){
-                $('#msg').html(data);
-                $('#table-container').load('fetch-data.php');
-
-            }
-        });
-    };
+    $(function(){
+        $('.todo-delete').click(function(){
+            var del_id= $(this).attr('id');
+            $.ajax({
+                type: "POST",
+                url: "todos/delete.php",
+                data: {todo_id: del_id},
+                success: function(response){
+                    console.log(response);
+                    if (response == 1){
+                        console.log("Deleted Successfully!!");
+                    }
+                    else{
+                        console.log("Can't delete the todo");
+                    }
+                },
+                error: function(response){
+                    console.log("Something wrong with delete function");
+                    console.log(response);
+                }
+            });
+        })
+    })
 </script>
 </html>
 

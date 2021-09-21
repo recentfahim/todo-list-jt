@@ -61,7 +61,7 @@ class Database{
         $rows = array();
         while($row = mysqli_fetch_array($result)){
             $temp = array();
-            $temp['id'] = $row['title'];
+            $temp['id'] = $row['id'];
             $temp['title'] = $row['title'];
             $temp['description'] = $row['description'];
             $rows[] = $temp;
@@ -71,7 +71,7 @@ class Database{
     }
 
     public function delete_todo($todo_id, $user_id){
-        $query = "DELETE from todos WHERE id=$todo_id and user_id=$user_id";
+        $query = "DELETE from todos WHERE id='".$todo_id."' and user_id='".$user_id."'";
         $result = mysqli_query($this->db, $query);
         if($result){
             return true;
