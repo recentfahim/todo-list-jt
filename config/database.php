@@ -65,6 +65,7 @@ class Database{
             $temp['id'] = $row['id'];
             $temp['title'] = $row['title'];
             $temp['description'] = $row['description'];
+            $temp['is_done'] = $row['is_done'];
             $rows[] = $temp;
         }
 
@@ -77,6 +78,35 @@ class Database{
         if($result){
             return true;
         }else{
+            return false;
+        }
+    }
+    /*
+        Check todo status and update to the reverse
+        If the todo was is_done false then make it is_done true
+        this will also apply for reverse
+    */
+
+    public function update_todo_status($todo_id, $user_id){
+        $query="SELECT * FROM todos WHERE id='".$todo_id."' and user_id='".$user_id."'";
+        $todo_check = $this->db->query($query) ;
+        $rows = $todo_check->num_rows;
+        $todo_data = mysqli_fetch_array($todo_check);
+
+        if ($rows == 1){
+            if($todo_data['is_done'] == 1){
+                $query="UPDATE todos SET is_done=0 WHERE id='".$todo_id."' and user_id='".$user_id."'";
+                $update = mysqli_query($this->db, $query) or die(mysqli_connect_errno()."Data can't be udpated");
+            }
+            else{
+                $query="UPDATE todos SET is_done=1 WHERE id='".$todo_id."' and user_id='".$user_id."'";
+                $update = mysqli_query($this->db, $query) or die(mysqli_connect_errno()."Data can't be udpated");
+            }
+            $todos = $this->get_todos($user_id);
+
+            return json_encode($todos);
+        }
+        else{
             return false;
         }
     }

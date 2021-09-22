@@ -1,4 +1,6 @@
 <?php
+    session_start();
+    
     require_once $_SERVER['DOCUMENT_ROOT'].'/todo-list-jt/config/database.php';
     $db = new Database();
     $user_id = $_SESSION['user_id'];

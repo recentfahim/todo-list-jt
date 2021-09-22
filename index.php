@@ -62,15 +62,21 @@ session_start();
     $todos = $db->get_todos($user_id);
 ?>
 <div class="container">
-    <div class="list-group">
+    <div class="list-group" id="todo-items">
         <?php
         foreach($todos as $todo):
             ?>
-            <div class="d-flex" class="list-group-item">
-                <div><?php echo $todo['title'] ?></div>
-                <div class="d-flex">
+            <div class="d-flex list-group-item list-group-item-action mb-2 border-top todo-item" id="<?php echo $todo['id']; ?>"> 
+                <div class="form-check w-100">
+                <input class="form-check-input" type="checkbox" id="flexCheckChecked<?php echo $todo['id']; ?>" <?php if($todo['is_done']){ echo 'checked';} else{echo '';} ?>>
+                <label class="form-check-label w-100" for="flexCheckChecked<?php echo $todo['id']; ?>">
+                    <div class="w-75"><?php echo $todo['title'] ?></div>
+                </label>
+                </div>
+                
+                <div class="d-flex float-right">
                     <div>
-                        <a href="#" id="<?php echo $todo['id'] ?>" class="todo-delete">
+                        <a href="#" id="<?php echo $todo['id'] ?>" class="todo-delete me-4">
                             <span class="text-danger">
                                 <i class="far fa-trash-alt"></i>
                             </span>
@@ -92,6 +98,63 @@ session_start();
 </div>
 </body>
 <script type="application/javascript">
+    function todo_list_template(todo){
+        var checked = '';
+        if(todo.is_done){
+            checked = 'checked'
+        }
+        var template =  '<div class="d-flex list-group-item list-group-item-action mb-2 border-top todo-item" id="'+todo.id+'">'+
+                    '<div class="form-check w-100">'+
+                    '<input class="form-check-input" type="checkbox" id="flexCheckChecked'+todo.id+'"'+checked+'>'+
+                    '<label class="form-check-label w-100" for="flexCheckChecked'+todo.id+'">'+
+                    '    <div class="w-75">'+todo.title+'</div>'+
+                    '</label>'+
+                    '</div>'+
+                    '<div class="d-flex float-right">'+
+                    '    <div>'+
+                    '        <a href="#" id="'+todo.id+'" class="todo-delete me-4">'+
+                    '            <span class="text-danger">'+
+                    '                <i class="far fa-trash-alt"></i>'+
+                    '            </span>'+
+                    '        </a>'+
+                    '    </div>'+
+                    '    <div>'+
+                    '        <a href="#" id="'+todo.id+'" class="todo-edit">'+
+                    '           <span class="text-info">'+
+                    '                <i class="far fa-edit"></i>'+
+                    '            </span>'+
+                    '        </a>'+
+                    '   </div>'+
+                    '</div></div>';
+        return template;
+
+    }
+    $(function(){
+        $('.todo-item').click(function(){
+            var todo_id = $(this).attr('id');
+            var todo_items = [];
+            $.ajax({
+                type: "POST",
+                url: 'todos/update.php',
+                data: {todo_id: todo_id},
+                success: function(response){  
+                    todo_items = JSON.parse(response)
+                    var todos = '';
+                    todo_items.forEach(todo => {
+                        var template = todo_list_template(todo);
+                        todos += template;
+                    });
+
+                    $('#todo-items').empty();
+                    $('#todo-items').append(todos);
+
+                },
+                error: function(response){
+                    console.log("Something wrong with the server");
+                }
+            })
+        })
+    })
     $(function(){
         $('.todo-delete').click(function(){
             var del_id= $(this).attr('id');
