@@ -185,13 +185,22 @@ session_start();
     })
 
     function create_todo(title) {
+        var todo_items = [];
         $.ajax({
             type: "POST",
             url: 'todos/create.php',
             data: {todo_title: title},
             success: function(response){
-                if(response == 1){
-                    console.log("Created Successfully!!");
+                if(response !== 0){
+                    todo_items = JSON.parse(response)
+                    var todos = '';
+                    todo_items.forEach(todo => {
+                        var template = todo_list_template(todo);
+                        todos += template;
+                    });
+
+                    $('#todo-items').empty();
+                    $('#todo-items').append(todos);
                 }
                 else{
                     console.log("Can't add the todo");

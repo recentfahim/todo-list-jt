@@ -50,7 +50,9 @@ class Database{
         $query = "INSERT INTO todos (title, description, user_id) VALUES ('".$title."', '".$description."', '".$user_id."')";
         $result = mysqli_query($this->db, $query) or die(mysqli_connect_errno()."Data cannot inserted");
         $todos = $this->get_todos($user_id);
-        return $user_id;
+        
+        $todos = $this->get_todos($user_id);
+        return json_encode($todos);
 
     }
 
