@@ -94,14 +94,9 @@ class Database{
         $todo_data = mysqli_fetch_array($todo_check);
 
         if ($rows == 1){
-            if($todo_data['is_done'] == 1){
-                $query="UPDATE todos SET is_done=0 WHERE id='".$todo_id."' and user_id='".$user_id."'";
-                $update = mysqli_query($this->db, $query) or die(mysqli_connect_errno()."Data can't be udpated");
-            }
-            else{
-                $query="UPDATE todos SET is_done=1 WHERE id='".$todo_id."' and user_id='".$user_id."'";
-                $update = mysqli_query($this->db, $query) or die(mysqli_connect_errno()."Data can't be udpated");
-            }
+            $query="UPDATE todos SET is_done=1 WHERE id='".$todo_id."' and user_id='".$user_id."'";
+            $update = mysqli_query($this->db, $query) or die(mysqli_connect_errno()."Data can't be udpated");
+            
             $todos = $this->get_todos($user_id);
 
             return json_encode($todos);

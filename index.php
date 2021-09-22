@@ -15,6 +15,9 @@ session_start();
             margin-right: 10px;
             text-decoration: none;
         }
+        .done-todo{
+            text-decoration: line-through;
+        }
     </style>
 </head>
 <body>
@@ -70,7 +73,7 @@ session_start();
                 <div class="form-check w-100">
                 <input class="form-check-input" type="checkbox" id="flexCheckChecked<?php echo $todo['id']; ?>" <?php if($todo['is_done']){ echo 'checked';} else{echo '';} ?>>
                 <label class="form-check-label w-100" for="flexCheckChecked<?php echo $todo['id']; ?>">
-                    <div class="w-75"><?php echo $todo['title'] ?></div>
+                    <div class="w-75 <?php if($todo['is_done']){ echo 'done-todo';} ?>"><?php echo $todo['title'] ?></div>
                 </label>
                 </div>
                 
@@ -100,14 +103,16 @@ session_start();
 <script type="application/javascript">
     function todo_list_template(todo){
         var checked = '';
+        var is_done = '';
         if(todo.is_done){
-            checked = 'checked'
+            checked = 'checked';
+            is_done = 'done-todo';
         }
         var template =  '<div class="d-flex list-group-item list-group-item-action mb-2 border-top todo-item" id="'+todo.id+'">'+
                     '<div class="form-check w-100">'+
                     '<input class="form-check-input" type="checkbox" id="flexCheckChecked'+todo.id+'"'+checked+'>'+
                     '<label class="form-check-label w-100" for="flexCheckChecked'+todo.id+'">'+
-                    '    <div class="w-75">'+todo.title+'</div>'+
+                    '    <div class="w-75 '+is_done+'">'+todo.title+'</div>'+
                     '</label>'+
                     '</div>'+
                     '<div class="d-flex float-right">'+
