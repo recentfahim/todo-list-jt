@@ -57,7 +57,7 @@ class Database{
     }
 
     public function get_todos($user_id){
-        $query = "SELECT * FROM todos WHERE user_id='".$user_id."'";
+        $query = "SELECT * FROM todos WHERE user_id='".$user_id."' ORDER BY id DESC";
         $result = mysqli_query($this->db, $query);
         // $todos = mysqli_fetch_array($result);
 
@@ -78,7 +78,8 @@ class Database{
         $query = "DELETE from todos WHERE id='".$todo_id."' and user_id='".$user_id."'";
         $result = mysqli_query($this->db, $query);
         if($result){
-            return true;
+            $todos = $this->get_todos($user_id);
+            return json_encode($todos);
         }else{
             return false;
         }

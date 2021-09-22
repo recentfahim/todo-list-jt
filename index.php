@@ -85,13 +85,6 @@ session_start();
                             </span>
                         </a>
                     </div>
-                    <div>
-                        <a href="#" id="<?php echo $todo['id'] ?>" class="todo-edit">
-                            <span class="text-info">
-                                <i class="far fa-edit"></i>
-                            </span>
-                        </a>
-                    </div>
                 </div>
             </div>
         <?php
@@ -101,10 +94,11 @@ session_start();
 </div>
 </body>
 <script type="application/javascript">
+
     function todo_list_template(todo){
         var checked = '';
         var is_done = '';
-        if(todo.is_done){
+        if(todo.is_done === '1'){
             checked = 'checked';
             is_done = 'done-todo';
         }
@@ -123,13 +117,6 @@ session_start();
                     '            </span>'+
                     '        </a>'+
                     '    </div>'+
-                    '    <div>'+
-                    '        <a href="#" id="'+todo.id+'" class="todo-edit">'+
-                    '           <span class="text-info">'+
-                    '                <i class="far fa-edit"></i>'+
-                    '            </span>'+
-                    '        </a>'+
-                    '   </div>'+
                     '</div></div>';
         return template;
 
@@ -142,7 +129,7 @@ session_start();
                 type: "POST",
                 url: 'todos/update.php',
                 data: {todo_id: todo_id},
-                success: function(response){  
+                success: function(response){
                     todo_items = JSON.parse(response)
                     var todos = '';
                     todo_items.forEach(todo => {
@@ -168,9 +155,17 @@ session_start();
                 url: "todos/delete.php",
                 data: {todo_id: del_id},
                 success: function(response){
-                    console.log(response);
-                    if (response == 1){
+                    if (response !== 0){
                         console.log("Deleted Successfully!!");
+                        var todo_items = JSON.parse(response);
+                        var todos = '';
+                        todo_items.forEach(todo => {
+                            var template = todo_list_template(todo);
+                            todos += template;
+                        });
+
+                        $('#todo-items').empty();
+                        $('#todo-items').append(todos);
                     }
                     else{
                         console.log("Can't delete the todo");
@@ -178,7 +173,6 @@ session_start();
                 },
                 error: function(response){
                     console.log("Something wrong with delete function");
-                    console.log(response);
                 }
             });
         })

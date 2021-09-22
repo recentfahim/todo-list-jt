@@ -13,7 +13,7 @@
             exit;
         }
 
-        echo 1;
+        echo $data_delete;
         exit;
     }
     else{
