@@ -108,6 +108,47 @@ class Database{
             return false;
         }
     }
+
+    public function create_roles($name){
+        $query = "INSERT INTO roles (name) VALUES ('".$name."')";
+        $result = mysqli_query($this->db, $query) or die(mysqli_connect_errno()."Data cannot inserted");
+        
+        if($result){
+            $roles = $this->get_roles();
+            return json_encode($roles);
+        }
+        else{
+            return false;
+        }
+
+    }
+
+    public function get_roles(){
+        $query = "SELECT * FROM roles ORDER BY id DESC";
+        $result = mysqli_query($this->db, $query);
+        // $todos = mysqli_fetch_array($result);
+
+        $rows = array();
+        while($row = mysqli_fetch_array($result)){
+            $temp = array();
+            $temp['id'] = $row['id'];
+            $temp['name'] = $row['name'];
+            $rows[] = $temp;
+        }
+
+        return $rows;
+    }
+
+    public function delete_role($role_id){
+        $query = "DELETE from roles WHERE id='".$role_id."'";
+        $result = mysqli_query($this->db, $query);
+        if($result){
+            $roles = $this->get_roles();
+            return json_encode($roles);
+        }else{
+            return false;
+        }
+    }
 }
 
 ?>

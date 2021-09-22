@@ -1,18 +1,18 @@
 <?php
     session_start();
-
+    
     require_once $_SERVER['DOCUMENT_ROOT'].'/todo-list-jt/config/database.php';
     $db = new Database();
 
-    if(isset($_POST['role_name'])){
-        $name = $_POST['role_name'];
-        $role = $db->create_roles($name);
-        if(!$role){
+    if(isset($_POST['role_id'])){
+        $id= $_POST['role_id'];
+        $data_delete = $db->delete_role($id);
+        if(!$data_delete){
             echo 0;
             exit;
         }
 
-        echo $role;
+        echo $data_delete;
         exit;
     }
     else{
